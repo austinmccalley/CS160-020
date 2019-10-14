@@ -38,13 +38,12 @@ Hint: you could find the left starting bit by increasing the exponent while the 
 '''
 if(curr_mode == 0):
     print('The binary equivalent is %s!' % str(decmToBinary()))
-
-#Scientific
-'''
-In scientific mode, the user can choose between the follow mathematical operations: +,-,*/, and **. All operators are binary so the user must be prompted for two operands following the operator. These operands can be integers or floating-point numbers. You need to print an error message for the
-selection of a bad mathematical operatiom, i.e. invalid selection.
-'''
 elif curr_mode == 1:
+    #Scientific
+    '''
+    In scientific mode, the user can choose between the follow mathematical operations: +,-,*/, and **. All operators are binary so the user must be prompted for two operands following the operator. These operands can be integers or floating-point numbers. You need to print an error message for the
+    selection of a bad mathematical operatiom, i.e. invalid selection.
+    '''
     operators = ['+','-','*','/','**']
 
     #TODO: Get
