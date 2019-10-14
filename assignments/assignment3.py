@@ -25,6 +25,8 @@ if __name__ == '__main__':
 
     curr_user_input = checkInput()
 
+
+    # Level 1
     if curr_user_input == 'Left':
         # Go left
         print('You find yourself in the middle of the Memorial Union Quad with students pushing you out of the way to get to class on time. You were pushed to the ground and you lost your map. Now you have to go blind throughout the campus. You have five minutes left until class starts.')
@@ -32,9 +34,13 @@ if __name__ == '__main__':
         # Redfine the current user input
         curr_user_input = checkInput()
 
+        # Level 2
         if curr_user_input == 'Left':
             # Go Left
             print('You find yourself inside of the Memorial Union Quad asleep on the couches with two minutes until your class starts. Probably in the better interest to just miss class and sleep it off.')
+
+            # Redfine the current user input
+            curr_user_input = checkInput()
 
         elif curr_user_input == 'Right':
             # Go Right
