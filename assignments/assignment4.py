@@ -13,7 +13,8 @@ def getMode():
 def decmToBinary():
     decimal = int(input('Please enter a decimal number which you would like converted to binary: '))
     if decimal < 0:
-        decmToBinary()
+        print('Please input a POSITIVE decimal number')
+        return decmToBinary()
     else:
         curr_num = decimal
         bin_num = []
@@ -44,6 +45,22 @@ elif curr_mode == 1:
     In scientific mode, the user can choose between the follow mathematical operations: +,-,*/, and **. All operators are binary so the user must be prompted for two operands following the operator. These operands can be integers or floating-point numbers. You need to print an error message for the
     selection of a bad mathematical operatiom, i.e. invalid selection.
     '''
-    operators = ['+','-','*','/','**']
+    num1 = float(input('Enter your first operand: '))
+    num2 = float(input('Enter your second operand: '))
 
-    #TODO: Get
+    operators = ['+','-','*','/','**']
+    user_operator = input('What operator do you wish to use? (%s) ' % ', '.join(operators))
+
+    if user_operator not in operators:
+        print('Please specify an operator from this list %s ' % ', '.join(operators))
+    else:
+        if user_operator == '+':
+            print(str(num1) + ' + ' + str(num2) + ' = ' + str(num1+num2))
+        elif user_operator == '-':
+            print(str(num1) + ' - ' + str(num2) + ' = ' + str(num1-num2))
+        elif user_operator == '*':
+            print(str(num1) + ' * ' + str(num2) + ' = ' + str(num1*num2))
+        elif user_operator == '/':
+            print(str(num1) + ' / ' + str(num2) + ' = ' + str(num1/num2))
+        elif user_operator == '**':
+            print(str(num1) + ' ** ' + str(num2) + ' = ' + str(num1**num2))
