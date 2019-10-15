@@ -1,6 +1,9 @@
+exit_con = False
+
+
 def getMode():
-    modes = [1,0]
-    user_mode = int(input('What mode do you want to be in, Programmer = 0, Scientific = 1? '))
+    modes = [1,0,2]
+    user_mode = int(input('What mode do you want to be in, Programmer = 0, Scientific = 1, Exit = 2? '))
     if user_mode in modes:
         return user_mode
     else:
@@ -30,37 +33,50 @@ def decmToBinary():
         return bin_num
 
 
-curr_mode = getMode()
+def doMath():
+    try:
+        num1 = float(input('Enter your first operand: '))
+        num2 = float(input('Enter your second operand: '))
 
-# Programmer
-'''
-In programmer mode, the user can enter any unsigned decimal number to convert to binary.
-Hint: you could find the left starting bit by increasing the exponent while the number is greater than equal to 2** exponent.
-'''
-if(curr_mode == 0):
-    print('The binary equivalent is %s!' % str(decmToBinary()))
-elif curr_mode == 1:
-    #Scientific
-    '''
-    In scientific mode, the user can choose between the follow mathematical operations: +,-,*/, and **. All operators are binary so the user must be prompted for two operands following the operator. These operands can be integers or floating-point numbers. You need to print an error message for the
-    selection of a bad mathematical operatiom, i.e. invalid selection.
-    '''
-    num1 = float(input('Enter your first operand: '))
-    num2 = float(input('Enter your second operand: '))
+        operators = ['+','-','*','/','**']
+        user_operator = input('What operator do you wish to use? (%s) ' % ', '.join(operators))
 
-    operators = ['+','-','*','/','**']
-    user_operator = input('What operator do you wish to use? (%s) ' % ', '.join(operators))
+        if user_operator not in operators:
+            print('Please specify an operator from this list %s ' % ', '.join(operators))
+        else:
+            if user_operator == '+':
+                print(str(num1) + ' + ' + str(num2) + ' = ' + str(num1+num2))
+            elif user_operator == '-':
+                print(str(num1) + ' - ' + str(num2) + ' = ' + str(num1-num2))
+            elif user_operator == '*':
+                print(str(num1) + ' * ' + str(num2) + ' = ' + str(num1*num2))
+            elif user_operator == '/':
+                print(str(num1) + ' / ' + str(num2) + ' = ' + str(num1/num2))
+            elif user_operator == '**':
+                print(str(num1) + ' ** ' + str(num2) + ' = ' + str(num1**num2))
+    except Exception as e:
+        print('WARNING: Got an exception %s ' % e)
 
-    if user_operator not in operators:
-        print('Please specify an operator from this list %s ' % ', '.join(operators))
-    else:
-        if user_operator == '+':
-            print(str(num1) + ' + ' + str(num2) + ' = ' + str(num1+num2))
-        elif user_operator == '-':
-            print(str(num1) + ' - ' + str(num2) + ' = ' + str(num1-num2))
-        elif user_operator == '*':
-            print(str(num1) + ' * ' + str(num2) + ' = ' + str(num1*num2))
-        elif user_operator == '/':
-            print(str(num1) + ' / ' + str(num2) + ' = ' + str(num1/num2))
-        elif user_operator == '**':
-            print(str(num1) + ' ** ' + str(num2) + ' = ' + str(num1**num2))
+
+
+while not exit_con:
+    curr_mode = getMode()
+    if curr_mode == 2:
+        break
+        exit_con = True
+
+
+    if(curr_mode == 0):
+        # Programmer
+        '''
+        In programmer mode, the user can enter any unsigned decimal number to convert to binary.
+        Hint: you could find the left starting bit by increasing the exponent while the number is greater than equal to 2** exponent.
+        '''
+        print('The binary equivalent is %s!' % str(decmToBinary()))
+    elif curr_mode == 1:
+        #Scientific
+        '''
+        In scientific mode, the user can choose between the follow mathematical operations: +,-,*/, and **. All operators are binary so the user must be prompted for two operands following the operator. These operands can be integers or floating-point numbers. You need to print an error message for the
+        selection of a bad mathematical operatiom, i.e. invalid selection.
+        '''
+        doMath()
