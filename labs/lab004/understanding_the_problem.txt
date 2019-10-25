@@ -1,0 +1,4 @@
+The problem is asking the user to make a summation from point a to point b.
+We are going to assume that the user wants to use one of the three predefined functions f1, f2, or f3.
+
+We need to make sure that the problem is always able to be breaken out of when the user no longer wants to run summations. Otherwise the program should always ask for the next function to be summed.
