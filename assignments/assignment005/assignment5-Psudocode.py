@@ -1,0 +1,146 @@
+'''
+Flow:
+    User pics which function (1, 2, 3)
+    Pick approximation method(Recatangle OR Trapezoidal)
+'''
+FUNCTION pickFunction():
+    OUTPUT 'f1: f1(x) <- 10x^2'
+    OUTPUT 'f2: f2(x) <- 2x^2 - 5'
+    OUTPUT 'f3: f3(x) <- x + 20'
+    function_names <- ['f1','f2','f3']
+    user_in <- input('Please pick a function from above to run an integration on: ')
+    IF user_in not in function_names:
+        OUTPUT 'Please try again. The function you picked was not in the pre-approved list'
+        RETURN pickFunction()
+    ELSE:
+        RETURN user_in
+    ENDIF
+ENDFUNCTION
+
+FUNCTION pickApproximation():
+    OUTPUT 'We are going to use trapezoidal(T) OR rectangle(R) method.'
+    approximation_names <- ['t','r', 'T', 'R']
+    user_in <- input('Please pick which approximation you would like to use: ')
+    IF user_in not in approximation_names:
+        OUTPUT 'Please try again. You did not pick a valid approximation name.'
+        RETURN pickApproximation()
+    ELSE:
+        RETURN user_in.lower()
+    ENDIF
+ENDFUNCTION
+
+FUNCTION function1(x):
+    ans <- 10.0*x**2.0
+    RETURN ans
+ENDFUNCTION
+
+FUNCTION function2(x):
+    RETURN 2.0*x**2.0 - 5.0
+ENDFUNCTION
+
+FUNCTION function3(x):
+    RETURN x + 20.0
+ENDFUNCTION
+
+FUNCTION rectangleApproximation(func):
+    try:
+        number_rectangles <- int(input('How many rectangles would you like to approximate with? '))
+        a_point <- int(input('Which x-value do you wish to start at? '))
+        b_point <- int(input('Which x-value do you wish to end at? '))
+        diff <- b_point - a_point
+         ENDIF
+        interval <- diff / number_rectangles
+                    ENDIF
+        IF func = 'f1':
+            # f1(x) <- 10x^2
+            summation <- 0
+            for x in range(1, number_rectangles+1):
+                eval_point <- a_point+(interval*x)
+                summation += function1(eval_point)
+            ENDFOR
+            RETURN interval  * summation
+        ELSEIF func = 'f2':
+            # f2(x) <- 2x^2 - 5
+            summation <- 0
+            for x in range(1, number_rectangles +1):
+                eval_point <- a_point+(interval*x)
+                summation += function2(eval_point)
+            ENDFOR
+            RETURN interval * summation
+        ELSEIF func = 'f3':
+            # f3(x) <- x + 20
+            summation <- 0
+            for x in range(1, number_rectangles+1):
+                eval_point <- a_point+(interval*x)
+                summation += function3(eval_point)
+            ENDFOR
+            RETURN interval * summation
+        ELSE:
+            OUTPUT 'What did you do? We are going to try this again!'
+            RETURN rectangleApproximation(func)
+        ENDIF
+    except Exception as e:
+        OUTPUT 'We got an exception: %s! Lets try this again' % e
+        RETURN rectangleApproximation(func)
+ENDFUNCTION
+
+FUNCTION trapezoidalApproximation(func):
+    try:
+        number_trapezoids <- int(input('How many trapezoids would you like to approximate with? '))
+        a_point <- int(input('Which x-value do you wish to start at? '))
+        b_point <- int(input('Which x-value do you wish to end with? '))
+        diff <- b_point - a_point
+         ENDIF
+        interval <- diff / number_trapezoids
+                    ENDIF
+        IF func = 'f1':
+            # f1(x) <- 10x^2
+            summation <- 0
+            for x in range(0, number_trapezoids+1):
+                eval_point <- a_point+(interval*x)
+                IF x = 0  OR x = number_trapezoids:
+                    summation += function1(eval_point)
+                ELSE:
+                    summation += 2.0*function1(eval_point)
+                ENDIF
+            ENDFOR
+            RETURN (interval/2) * summation
+        ELSEIF func = 'f2':
+            # f2(x) <- 2x^2 - 5
+            summation <- 0
+            for x in range(0, number_trapezoids+1):
+                eval_point <- a_point+(interval*x)
+                IF x = 0 OR x = number_trapezoids:
+                    summation += function2(eval_point)
+                ELSE:
+                    summation += 2.0*function2(eval_point)
+                ENDIF
+            ENDFOR
+            RETURN (interval/2) * summation
+        ELSEIF func = 'f3':
+            # f3(x) <- x + 20
+            summation <- 0
+            for x in range(0, number_trapezoids+1):
+                eval_point <- a_point+(interval*x)
+                IF x = 0 OR x = number_trapezoids:
+                    summation += function3(eval_points)
+                ELSE:
+                    summation += 2.0*function3(eval_points)
+        ENDIF
+                ENDIF
+            ENDFOR
+    except Exception as e:
+        OUTPUT e
+        OUTPUT 'We got an exception: %s! Lets try this again!' % e
+        RETURN trapezoidalApproximation(func)
+ENDFUNCTION
+
+function <- pickFunction()
+approximation <- pickApproximation()
+IF approximation = 'r':
+    approx <- rectangleApproximation(function)
+    OUTPUT 'We got an approximation of %s for the function you requested!' % approx 
+                                         ENDFOR
+ELSEIF approximation = 't':
+    approx <- trapezoidalApproximation(function)
+    OUTPUT 'We got an approximation of %s for the function you requested!' % approx 
