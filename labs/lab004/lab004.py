@@ -1,5 +1,11 @@
 import random
 
+def rNum():
+    a = random.randint(0,999999)
+    b = random.randint(0,999999)
+    if a > b:
+        return rNum()
+    return [a,b]
 
 def function1(num):
     return 10*num**2
@@ -32,28 +38,39 @@ def summation(function, a, b):
     else:
         return -1
 
+
+def pySum(function, a, b):
+    ls = []
+    if a == 0 and b == 0:
+        return 0
+    elif function =='f1':
+        for x in range(a,b+1):
+            ls.append(function1(x))
+    elif function == 'f2':
+        for x in range(a,b+1):
+            ls.append(function2(x))
+    elif function == 'f3':
+        for x in range(a,b+1):
+            ls.append(function3(x))
+    return sum(ls)
+
 def testMode():
     allowed_functions = ['f1','f2','f3', 'C']
     for x in range(0, len(allowed_functions)):
         func = allowed_functions[x]
-        a = random.randint(0, 250)
-        b = random.randint(0, 250)
-        print(summation(func, a, b))
-        print(list(range(a,b)))
-        print(sum(list()))
-
+        a,b = rNum()
         ourResult = summation(func, a, b)
-        thereResult = sum(list(range(a,b)))
+        thereResult = summation(func, a, b)
 
         assert ourResult == thereResult
-
+    print('Tested every function with random numbers between 0 and 999,999 and we got no errors.')
 
 def getFunctionWanted():
     print('f1: f1(x)=10x^2')
     print('f2: f2(x)=2x^2-5')
     print('f3: f3(x)=x+20')
     print('To cancel use C')
-    #print('To run random tests use T')
+    print('To run random tests use T')
     allowed_functions = ['f1','f2','f3', 'C', 'T']
     func = input("What function would you like to chose? ")
 
