@@ -2,6 +2,7 @@
 Flow:
     User pics which function (1, 2, 3)
     Pick approximation method(Recatangle OR Trapezoidal)
+    Do the according approximation
 '''
 FUNCTION pickFunction():
     OUTPUT 'f1: f1(x) <- 10x^2'
@@ -90,9 +91,8 @@ FUNCTION trapezoidalApproximation(func):
         a_point <- int(input('Which x-value do you wish to start at? '))
         b_point <- int(input('Which x-value do you wish to end with? '))
         diff <- b_point - a_point
-         ENDIF
         interval <- diff / number_trapezoids
-                    ENDIF
+
         IF func = 'f1':
             # f1(x) <- 10x^2
             summation <- 0
@@ -126,9 +126,9 @@ FUNCTION trapezoidalApproximation(func):
                     summation += function3(eval_points)
                 ELSE:
                     summation += 2.0*function3(eval_points)
-        ENDIF
                 ENDIF
             ENDFOR
+	ENDIF
     except Exception as e:
         OUTPUT e
         OUTPUT 'We got an exception: %s! Lets try this again!' % e
@@ -139,8 +139,8 @@ function <- pickFunction()
 approximation <- pickApproximation()
 IF approximation = 'r':
     approx <- rectangleApproximation(function)
-    OUTPUT 'We got an approximation of %s for the function you requested!' % approx 
-                                         ENDFOR
+    OUTPUT 'We got an approximation of %s for the function you requested!' % approx                
 ELSEIF approximation = 't':
     approx <- trapezoidalApproximation(function)
     OUTPUT 'We got an approximation of %s for the function you requested!' % approx 
+ENDIF

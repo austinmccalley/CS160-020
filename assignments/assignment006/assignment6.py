@@ -2,9 +2,6 @@
 Flow:
     User pics which function (1, 2, 3)
     Pick approximation method(Recatangle or Trapezoidal)
-
-
-
 '''
 
 
@@ -47,11 +44,11 @@ def function2(x):
 def function3(x):
     return x + 20.0
 
-def rectangleApproximation(func):
+def rectangleApproximation(func,number_rectangles,a_point,b_point):
     try:
-        number_rectangles = int(input('How many rectangles would you like to approximate with? '))
-        a_point = int(input('Which x-value do you wish to start at? '))
-        b_point = int(input('Which x-value do you wish to end at? '))
+        #number_rectangles = int(input('How many rectangles would you like to approximate with? '))
+        #a_point = int(input('Which x-value do you wish to start at? '))
+        #b_point = int(input('Which x-value do you wish to end at? '))
 
         diff = b_point - a_point
         interval = diff / number_rectangles
@@ -96,11 +93,11 @@ def rectangleApproximation(func):
 
 
 
-def trapezoidalApproximation(func):
+def trapezoidalApproximation(func,number_trapezoids,a_point,b_point):
     try:
-        number_trapezoids = int(input('How many trapezoids would you like to approximate with? '))
-        a_point = int(input('Which x-value do you wish to start at? '))
-        b_point = int(input('Which x-value do you wish to end with? '))
+        #number_trapezoids = int(input('How many trapezoids would you like to approximate with? '))
+        #a_point = int(input('Which x-value do you wish to start at? '))
+        #b_point = int(input('Which x-value do you wish to end with? '))
 
         diff = b_point - a_point
 
@@ -145,12 +142,25 @@ def trapezoidalApproximation(func):
         print('We got an exception: %s! Lets try this again!' % e)
         return trapezoidalApproximation(func)
 
-function = pickFunction()
-approximation = pickApproximation()
 
-if approximation == 'r':
-    approx = rectangleApproximation(function)
-    print('We got an approximation of %s for the function you requested!' % approx )
-elif approximation == 't':
-    approx = trapezoidalApproximation(function)
-    print('We got an approximation of %s for the function you requested!' % approx )
+def main():
+    function = pickFunction()
+    approximation = pickApproximation()
+
+    if approximation == 'r':
+        number_rectangles = int(input('How many rectangles would you like to approximate with? '))
+        a_point = int(input('Which x-value do you wish to start at? '))
+        b_point = int(input('Which x-value do you wish to end with? '))
+
+        approx = rectangleApproximation(function,number_rectangles, a_point, b_point)
+        print('We got an approximation of %s for the function you requested!' % approx )
+    elif approximation == 't':
+        number_trapezoids = int(input('How many trapezoids would you like to approximate with? '))
+        a_point = int(input('Which x-value do you wish to start at? '))
+        b_point = int(input('Which x-value do you wish to end with? '))
+        approx = trapezoidalApproximation(function, number_trapezoids, a_point, b_point)
+        print('We got an approximation of %s for the function you requested!' % approx )
+
+
+if __name__ == "__main__":
+    main()
