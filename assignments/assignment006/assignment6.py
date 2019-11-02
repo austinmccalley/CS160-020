@@ -21,9 +21,9 @@ def pickFunction():
 
 
 def pickApproximation():
-    print('We are going to use trapezoidal(T) or rectangle(R) method.')
+    print('We are going to use trapezoidal(T) or rectangle(R) method. If you wish to quit use Q')
 
-    approximation_names = ['t','r', 'T', 'R']
+    approximation_names = ['t','r', 'T', 'R', 'Q', 'q']
 
     user_in = input('Please pick which approximation you would like to use: ')
 
@@ -46,9 +46,6 @@ def function3(x):
 
 def rectangleApproximation(func,number_rectangles,a_point,b_point):
     try:
-        #number_rectangles = int(input('How many rectangles would you like to approximate with? '))
-        #a_point = int(input('Which x-value do you wish to start at? '))
-        #b_point = int(input('Which x-value do you wish to end at? '))
 
         diff = b_point - a_point
         interval = diff / number_rectangles
@@ -95,9 +92,6 @@ def rectangleApproximation(func,number_rectangles,a_point,b_point):
 
 def trapezoidalApproximation(func,number_trapezoids,a_point,b_point):
     try:
-        #number_trapezoids = int(input('How many trapezoids would you like to approximate with? '))
-        #a_point = int(input('Which x-value do you wish to start at? '))
-        #b_point = int(input('Which x-value do you wish to end with? '))
 
         diff = b_point - a_point
 
@@ -134,9 +128,11 @@ def trapezoidalApproximation(func,number_trapezoids,a_point,b_point):
             for x in range(0, number_trapezoids+1):
                 eval_point = a_point+(interval*x)
                 if x == 0 or x == number_trapezoids:
-                    summation += function3(eval_points)
+                    summation += function3(eval_point)
                 else:
-                    summation += 2.0*function3(eval_points)
+                    summation += 2.0*function3(eval_point)
+            return (interval/2) * summation
+
     except Exception as e:
         print(e)
         print('We got an exception: %s! Lets try this again!' % e)
@@ -144,22 +140,40 @@ def trapezoidalApproximation(func,number_trapezoids,a_point,b_point):
 
 
 def main():
-    function = pickFunction()
-    approximation = pickApproximation()
+    while True:
+        function = pickFunction()
+        approximation = pickApproximation()
 
-    if approximation == 'r':
-        number_rectangles = int(input('How many rectangles would you like to approximate with? '))
-        a_point = int(input('Which x-value do you wish to start at? '))
-        b_point = int(input('Which x-value do you wish to end with? '))
-
-        approx = rectangleApproximation(function,number_rectangles, a_point, b_point)
-        print('We got an approximation of %s for the function you requested!' % approx )
-    elif approximation == 't':
-        number_trapezoids = int(input('How many trapezoids would you like to approximate with? '))
-        a_point = int(input('Which x-value do you wish to start at? '))
-        b_point = int(input('Which x-value do you wish to end with? '))
-        approx = trapezoidalApproximation(function, number_trapezoids, a_point, b_point)
-        print('We got an approximation of %s for the function you requested!' % approx )
+        if approximation == 'r':
+            number_rectangles = int(input('How many rectangles would you like to approximate with? '))
+            if number_rectangles <= 0:
+                print('Make sure the number of rectangles is greater than 0')
+                main()
+            else:
+                a_point = int(input('Which x-value do you wish to start at? '))
+                b_point = int(input('Which x-value do you wish to end with? '))
+                if a_point == 0 and b_point == 0:
+                    print('Lets try this again and ensure you find an intergral greater difference than 0')
+                    main()
+                else:
+                    approx = rectangleApproximation(function,number_rectangles, a_point, b_point)
+                    print('We got an approximation of %s for the function you requested!' % approx )
+        elif approximation == 't':
+            number_trapezoids = int(input('How many trapezoids would you like to approximate with? '))
+            if number_trapezoids <= 0:
+                print('Make sure the number of trapezoids is greater than 0')
+                main()
+            else:
+                a_point = int(input('Which x-value do you wish to start at? '))
+                b_point = int(input('Which x-value do you wish to end with? '))
+                if a_point == 0 and b_point == 0:
+                    print('Lets try this again and ensure you find an intergral greater difference than 0')
+                    main()
+                else:
+                    approx = trapezoidalApproximation(function, number_trapezoids, a_point, b_point)
+                    print('We got an approximation of %s for the function you requested!' % approx )
+        elif approximation == 'q':
+            break
 
 
 if __name__ == "__main__":
