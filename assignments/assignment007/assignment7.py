@@ -905,7 +905,6 @@ def main():
         myTurtle.penup()
         myTurtle.sety(sy - 150)
         myTurtle.setx(0)
-        print('RETURN')
       space(myTurtle)
       for ch in word:
           ch = ch.lower()
