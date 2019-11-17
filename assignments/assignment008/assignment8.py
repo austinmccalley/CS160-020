@@ -77,31 +77,38 @@ def commonNums(l1, l2):
         for num2 in l2:
             if num1 == num2 and num1 not in common_nums:
                 common_nums.append(num1)
+    if len(common_nums) == 0:
+        return('No Common Numbers')
     return common_nums
 
-def remove_duplicates(l):
-    flist = []
-    for n in l:
-        if n not in flist:
-            flist.append(n)
-    return flist
+
+def sameLength(l1, l2):
+    return len(l1) == len(l2)
 
 def main():
+    # Name frequncy and input of names
     ninput1 = getNameInput()
     print(letterFrequency(ninput1))
 
+    # Get the two inputs for the number lists
     num_input1 = getNumberInput()
     num_input2 = getNumberInput()
 
-    print('The lists are the same length: ', len(num_input1) == len(num_input2))
+    # Check to see if the lists are the same length
+    print('The lists are the same length: ', sameLength(num_input1, num_input2))
 
-    print('Sum of List 1: ', sumList(num_input1))
+    # Averages of the two lists
     print('Average of List 1: ', avgList(num_input1))
-    
-    print('Sum of List 2: ', sumList(num_input2))
     print('Average of List 2: ', avgList(num_input2))
-    
+
+    # Summation for the two lists
+    print('Sum of List 1: ', sumList(num_input1))
+    print('Sum of List 2: ', sumList(num_input2))
+
+    # Isn't a difference between the two sums of the lists
     print('Sum\'s of List 1 and 2 Are Different: ', compareListSum(num_input1, num_input2))
+
+    # Print common numbers between the two lists
     print('Common Numbers between the two lists: ', commonNums(num_input1, num_input2))
 if __name__ == "__main__":
     main()
