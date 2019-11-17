@@ -29,20 +29,17 @@ def isInt(s):
                 return False
         return True
 
-def getNumberInput(num_list=[]):
-    e = False
-    print('If you wish to exit please type exit')
-    while not e:
-        num = input('Please enter a number or exit: ')
-        if num == 'exit':
-            e = True
-            break
-        elif isInt(num):
-            num_list.append(int(num))
-        else:
-            print('You did not input a number!!')
-            return getNumberInput(num_list)
-    return num_list
+def getNumberInput():
+    print('Please enter a list of numbers for your first list. Each number should be seperated by a comma')
+    user_in = input('Numbers: ')
+    uia = user_in.split(',')
+    nums = []
+    for l in uia:
+        n = l.strip()
+        if not len(n) == 0:
+            if isInt(n):
+                nums.append(int(n))
+    return nums
 
 def letterFrequency(l):
     all_freq = {}
@@ -65,22 +62,22 @@ def sumList(l):
 
 def avgList(l):
     top = sumList(l)
-    return top/len(l)
+    if len(l) > 0:
+        return top/len(l)
+    return None
 
 def compareListSum(l1, l2):
     sl1 = sumList(l1)
     sl2 = sumList(l2)
-    return sl1 == sl2
+    return sl1 != sl2
 
 def commonNums(l1, l2):
     common_nums = []
-    print(l1, l2)
     for num1 in l1:
         for num2 in l2:
-            if num1 == num2:
-                print(num1, num2)
+            if num1 == num2 and num1 not in common_nums:
                 common_nums.append(num1)
-    return remove_duplicates(common_nums)
+    return common_nums
 
 def remove_duplicates(l):
     flist = []
@@ -92,14 +89,19 @@ def remove_duplicates(l):
 def main():
     ninput1 = getNameInput()
     print(letterFrequency(ninput1))
-    
-    
+
     num_input1 = getNumberInput()
     num_input2 = getNumberInput()
+
+    print('The lists are the same length: ', len(num_input1) == len(num_input2))
+
+    print('Sum of List 1: ', sumList(num_input1))
+    print('Average of List 1: ', avgList(num_input1))
     
-    print(sumList(num_input1))
-    print(avgList(num_input1))
-    print(compareListSum(num_input1, num_input2))
-    print(commonNums(num_input1, num_input2))
+    print('Sum of List 2: ', sumList(num_input2))
+    print('Average of List 2: ', avgList(num_input2))
+    
+    print('Sum\'s of List 1 and 2 Are Different: ', compareListSum(num_input1, num_input2))
+    print('Common Numbers between the two lists: ', commonNums(num_input1, num_input2))
 if __name__ == "__main__":
     main()
