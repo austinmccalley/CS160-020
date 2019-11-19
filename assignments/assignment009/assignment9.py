@@ -1,18 +1,31 @@
-def is_int(s):
-    negative = True if s[:1] == '-' else False
-    if negative:
-        if len(s) == 1:
-            return False
-        s = s[1:]
-        for c in s:
-            if not (c>='0' and c<='9'):
-                return False
-        return True
-    else:
-        for c in s:
-            if not(c>='0' and c<='9'):
-                return False
-        return True
+def is_floating_pt(s):
+   negative = True if s[:1] == '-' else False
+   split_s = s.split('.')
+   if not len(split_s) == 2:
+       return False
+   if negative:
+       s = s[1:]
+       rd = 0
+       for c in s:
+           if not (c>='0' and c<= '9') or c == '.':
+                if c == '.':
+                   rd += 1
+                else:
+                    return False
+       if rd > 1:
+           return False
+       return True
+   else:
+       rd = 0
+       for c in s:
+           if not (c>='0' and c<= '9') or c == '.':
+             if c == '.':
+                 rd +=1
+             else:
+                 return False
+       if rd > 1:
+           return False
+       return True
 
 def getTC():
     user_in = input('Please enter the thermal conductivity you want to use: ')
