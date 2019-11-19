@@ -1,3 +1,10 @@
+import math
+
+def floor_float(f):
+    f = str(f)
+    fa = f.split('.')
+    return int(fa[0])
+
 def is_int(s):
     negative = True if s[:1] == '-' else False
     if negative:
@@ -70,11 +77,11 @@ def iTemp():
         return iTemp()
 
 def bConditions():
-    user_in = input('Please provide the left and right temperature conditions seperated by a comma')
+    user_in = input('Please provide the left and right temperature conditions seperated by a comma: ')
     ua = user_in.split(',')
     res = []
     for _e in ua:
-        e = _e.trim()
+        e = _e.strip()
         if is_float(e):
             res.append(float(e))
         else:
@@ -114,27 +121,80 @@ def dTime():
         print('Please provide a proper floating point')
         return dTime()
 
+def checkStability(k, dt, ml, sec, c, p):
+    dt_tc = k*dt
+    dx = ml / sec
+    cp = c * p
+    bot = dx**2 * cp
+    # DEBUG
+    # print(dt_tc, dx, cp, bot)
+
+    div = dt_tc / bot
+    # DEBUG
+    # print(div)
+
+    if abs(div) < 0.05:
+        return False
+    else:
+        return True
+
+def calcTimes(ti, dt):
+    times = []
+    for i in range(ti):
+        curr_time = dt*i
+        times.append(curr_time)
+    return times
+
+def calcPoints(ml, sec):
+    points = []
+    dx = ml/sec
+    sec = floor_float(sec)
+    for i in range(sec+1):
+        points.append(dx*i)
+    return points
+
 def main():
 
     # Thermal Conductivity k
-    tc = None
+    tc = getTC()
     # Density
-    density = None
+    density = getDensity()
     # Specific heat
-    sh = None
+    sh = getSH()
 
     # Intial and Boundary Conditions
-    init_c = None
-    b_c = None
+    init_t = iTemp()
+    sc, ec = bConditions()
 
     # Material Length
-    ml = None
+    ml = mLength()
     # Divide length in x sections
-    sections = None
+    sections = mSections()
 
     # Number of time intervals
-    ti = None
+    ti = tIntervals()
     # Delta time
-    dt = None
+    dt = dTime()
 
+    print(tc, density, sh)
+    print(init_t, sc, ec)
+    print(ml, sections)
+    print(ti, dt)
 
+    if not checkStability(tc, dt, ml, sections, sh, density):
+        print('The conditions you gave are unstable!')
+        sys.exit()
+
+    times = calcTimes(ti, dt)
+    ax = calcPoints(ml, sections)
+    print(ax)
+
+    for t in times:
+        print(t)
+        for x in ax:
+            coef = density * sh
+            top = (x*(t+dt)) - (x*t)
+            div = top/dt
+            ans = coef * div
+            print(ans)
+main()
