@@ -99,10 +99,10 @@ def mLength():
 
 def mSections():
     user_in = input('Please provide the number of sections the material will be divided in: ')
-    if is_float(user_in) or is_int(user_in):
-        return float(user_in)
+    if is_int(user_in):
+        return int(user_in)
     else:
-        print('Please provide a proper floating point or an integer')
+        print('Please provide an integer')
         return mSections()
 
 def tIntervals():
@@ -153,6 +153,12 @@ def calcPoints(ml, sec):
         points.append(dx*i)
     return points
 
+def calcT(sec, t):
+    if t == 0:
+        return [0]*int(sec)
+    else:
+        ([1]*int(sec))*int(t)
+
 def main():
 
     # Thermal Conductivity k
@@ -176,25 +182,38 @@ def main():
     # Delta time
     dt = dTime()
 
+    dx = ml/sections
+
     print(tc, density, sh)
     print(init_t, sc, ec)
     print(ml, sections)
     print(ti, dt)
 
+
+
     if not checkStability(tc, dt, ml, sections, sh, density):
         print('The conditions you gave are unstable!')
-        sys.exit()
+        exit()
 
-    times = calcTimes(ti, dt)
-    ax = calcPoints(ml, sections)
-    print(ax)
 
-    for t in times:
-        print(t)
-        for x in ax:
-            coef = density * sh
-            top = (x*(t+dt)) - (x*t)
-            div = top/dt
-            ans = coef * div
-            print(ans)
+    x = calcPoints(ml, sections)
+    T = calcT(sections, init_t)
+    dTdt = [1]*int(sections)
+    t = calcTimes(ti, dt)
+    
+    n=sections
+    alpha = 0.0001
+
+
+    for j in range(1, len(t)):
+        for i in range(1, n-1):
+            dTdt[i] = alpha * (-(T[i]-T[i-1])/dx**2 + (T[i+1]-T[i])/dx**2)
+        dTdt[0] = alpha * (-(T[0]-sc)/dx**2 + (T[0+1]-T[0])/dx**2)
+        dTdt[n-1] = alpha * (-(T[n-1]-T[n-2])/dx**2 + (ec-T[n-1])/dx**2)
+        T = T + dTdt*dt
+        print(T)
+    
+    
+
+
 main()
