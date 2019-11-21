@@ -1,1 +1,4 @@
 *.tmp
+*\out.csv
+assignments\assignment009\__pycache__
+*\__pycache__
