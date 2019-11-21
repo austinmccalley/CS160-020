@@ -181,36 +181,16 @@ def visualize(fn, wl, wd, tl, tr, v):
     # Animate the plot
     plotter.animate()
 
+def copyList(l):
+    res = []
+    for e in l:
+        res.append(e)
+    return res
 
-def main():
+def doCalcs(k, p, c, it, lt, rt, l, sc, ti, dt):
+    dx = l / sc
 
-    # Thermal Conductivity k
-    k = getTC()
-    # Density
-    p = getDensity()
-    # Specific heat
-    c = getSH()
-
-    # Intial and Boundary Conditions
-    init_temp = iTemp()
-    left_temp, right_temp = bConditions()
-
-    # Material Length
-    length = mLength()
-    # Divide length in x sections
-    sections = mSections()
-    # delta x - Self explanitory
-    deltax = length / sections
-
-    # Number of time intervals
-    time_int = tIntervals()
-    # Delta time
-    deltat = dTime()
-
-
-
-
-    const = (k*deltat)/(deltax**2 * c *p)
+    const = (k*dt)/(dx**2 * c *p)
 
     if abs(const) > 0.5:
         print('Unstable conditions! Exiting program')
@@ -219,24 +199,74 @@ def main():
     # Hold all the arrays of all time
     u = []
 
-    uold = [init_temp]*sections
-    uold[0] = left_temp
-    uold[sections-1] = right_temp
+    uold = [it]*sc
+    uold[0] = lt
+    uold[sc-1] = rt
 
-    unew = [init_temp]*sections
-    unew[0] = left_temp
-    unew[sections-1] = right_temp
+    unew = [it]*sc
+    unew[0] = lt
+    unew[sc-1] = rt
 
-    for i in range(time_int):
-        for x in range(1, sections - 1):
+
+    for i in range(ti):
+        for x in range(1, sc - 1):
             top = (uold[x+1]-2*uold[x]+uold[x-1])
             unew[x]=const*top + uold[x]
-        u.append(unew)
-        print(i, u[i])
-        uold = u[-1]
+        u.append(unew[:])
+        uold = copyList(u[i])
+    
+    return u[:]
 
+
+def main(debug):
+
+    if debug:
+        k = 52.4
+        c = 0.12
+        p = 0.321
+        
+        init_temp = 0.0
+        left_temp = 0.0
+        right_temp = 100
+
+        length = 10.0
+        sections = 10
+
+        time_int = 50
+        deltat = 0.000335
+
+    else:
+        
+        # Thermal Conductivity k
+        k = getTC()
+        # Density
+        p = getDensity()
+        # Specific heat
+        c = getSH()
+
+        # Intial and Boundary Conditions
+        init_temp = iTemp()
+        left_temp, right_temp = bConditions()
+
+        # Material Length
+        length = mLength()
+        # Divide length in x sections
+        sections = mSections()
+        # delta x - Self explanitory
+        deltax = length / sections
+
+        # Number of time intervals
+        time_int = tIntervals()
+        # Delta time
+        deltat = dTime()
+
+    
+    u = doCalcs(k, p, c, init_temp, left_temp, right_temp, length, sections, time_int, deltat)
+
+
+    print(u)
     saveListToCSV(u, "out")
     visualize("out", length, sections, left_temp, right_temp, True)
     
 
-main()
+main(True)
