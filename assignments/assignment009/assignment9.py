@@ -193,6 +193,7 @@ def doCalcs(k, p, c, it, lt, rt, l, sc, ti, dt):
     const = (k*dt)/(dx**2 * c *p)
 
     if abs(const) > 0.5:
+        print('Got the constant value of %s' % const)
         print('Unstable conditions! Exiting program')
         exit()
 
@@ -218,7 +219,7 @@ def doCalcs(k, p, c, it, lt, rt, l, sc, ti, dt):
     return u[:]
 
 
-def main(debug):
+def main(debug=False):
 
     if debug:
         k = 52.4
@@ -269,4 +270,4 @@ def main(debug):
     visualize("out", length, sections, left_temp, right_temp, True)
     
 
-main(True)
+main()
