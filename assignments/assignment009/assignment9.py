@@ -1,4 +1,5 @@
 import math
+import matplotlib.pyplot as plt
 
 def floor_float(f):
     f = str(f)
@@ -162,58 +163,55 @@ def calcT(sec, t):
 def main():
 
     # Thermal Conductivity k
-    tc = getTC()
+    k = getTC()
     # Density
-    density = getDensity()
+    p = getDensity()
     # Specific heat
-    sh = getSH()
+    c = getSH()
 
     # Intial and Boundary Conditions
-    init_t = iTemp()
-    sc, ec = bConditions()
+    init_temp = iTemp()
+    left_temp, right_temp = bConditions()
 
     # Material Length
-    ml = mLength()
+    length = mLength()
     # Divide length in x sections
     sections = mSections()
+    # delta x - Self explanitory
+    deltax = length / sections
 
     # Number of time intervals
-    ti = tIntervals()
+    time_int = tIntervals()
     # Delta time
-    dt = dTime()
-
-    dx = ml/sections
-
-    print(tc, density, sh)
-    print(init_t, sc, ec)
-    print(ml, sections)
-    print(ti, dt)
+    deltat = dTime()
 
 
 
-    if not checkStability(tc, dt, ml, sections, sh, density):
-        print('The conditions you gave are unstable!')
+
+    const = (k*deltat)/(deltax**2 * c *p)
+
+    if abs(const) > 0.5:
+        print('Unstable conditions! Exiting program')
         exit()
 
+    # Hold all the arrays of all time
+    u = []
 
-    x = calcPoints(ml, sections)
-    T = calcT(sections, init_t)
-    dTdt = [1]*int(sections)
-    t = calcTimes(ti, dt)
+    uold = [init_temp]*sections
+    uold[0] = left_temp
+    uold[sections-1] = right_temp
+
+    unew = [init_temp]*sections
+    unew[0] = left_temp
+    unew[sections-1] = right_temp
+
+    for i in range(time_int):
+        for x in range(1, sections - 1):
+            top = (uold[x+1]-2*uold[x]+uold[x-1])
+            unew[x]=const*top + uold[x]
+        u.append(unew)
+        print(i, u[i])
+        uold = u[-1]
     
-    n=sections
-    alpha = 0.0001
-
-
-    for j in range(1, len(t)):
-        for i in range(1, n-1):
-            dTdt[i] = alpha * (-(T[i]-T[i-1])/dx**2 + (T[i+1]-T[i])/dx**2)
-        dTdt[0] = alpha * (-(T[0]-sc)/dx**2 + (T[0+1]-T[0])/dx**2)
-        dTdt[n-1] = alpha * (-(T[n-1]-T[n-2])/dx**2 + (ec-T[n-1])/dx**2)
-        T = T + dTdt*dt
-        print(T)
-    
-    
-
 
 main()
