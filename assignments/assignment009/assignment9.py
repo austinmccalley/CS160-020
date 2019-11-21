@@ -1,10 +1,6 @@
-import math
-import matplotlib.pyplot as plt
+import math, csv
+from wire_plotter import Wire_Plotter
 
-def floor_float(f):
-    f = str(f)
-    fa = f.split('.')
-    return int(fa[0])
 
 def is_int(s):
     negative = True if s[:1] == '-' else False
@@ -160,6 +156,32 @@ def calcT(sec, t):
     else:
         ([1]*int(sec))*int(t)
 
+def saveListToCSV(l, fn):
+    with open(fn+".csv", "w", newline="") as f:
+        writer = csv.writer(f)
+        writer.writerows(l)
+
+def visualize(fn, wl, wd, tl, tr, v):
+    plotter = Wire_Plotter(wl, wd, tl, tr, v)
+
+    f = open(fn+".csv", "r")
+    lines = f.readlines()
+    for l in lines:
+        # Read in a line from the file and split on the comma
+        wire_temps = l.split(',')
+
+        # Convert all element of the list to be floats
+        for i in range(len(wire_temps)):
+            wire_temps[i] = float(wire_temps[i])
+        print(wire_temps)
+
+        # Pass in the the array of the wire temps
+        plotter.add_interval(wire_temps)
+    
+    # Animate the plot
+    plotter.animate()
+
+
 def main():
 
     # Thermal Conductivity k
@@ -212,6 +234,9 @@ def main():
         u.append(unew)
         print(i, u[i])
         uold = u[-1]
+
+    saveListToCSV(u, "out")
+    visualize("out", length, sections, left_temp, right_temp, True)
     
 
 main()
