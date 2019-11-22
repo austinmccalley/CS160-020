@@ -215,7 +215,7 @@ def doCalcs(k, p, c, it, lt, rt, l, sc, ti, dt):
             unew[x]=const*top + uold[x]
         u.append(unew[:])
         uold = copyList(u[i])
-    
+
     return u[:]
 
 
@@ -225,7 +225,7 @@ def main(debug=False):
         k = 52.4
         c = 0.12
         p = 0.321
-        
+
         init_temp = 0.0
         left_temp = 0.0
         right_temp = 100
@@ -237,7 +237,6 @@ def main(debug=False):
         deltat = 0.000335
 
     else:
-        
         # Thermal Conductivity k
         k = getTC()
         # Density
@@ -261,13 +260,12 @@ def main(debug=False):
         # Delta time
         deltat = dTime()
 
-    
     u = doCalcs(k, p, c, init_temp, left_temp, right_temp, length, sections, time_int, deltat)
 
 
     print(u)
     saveListToCSV(u, "out")
     visualize("out", length, sections, left_temp, right_temp, True)
-    
+
 
 main()
