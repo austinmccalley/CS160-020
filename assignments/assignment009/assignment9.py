@@ -173,7 +173,7 @@ def visualize(fn, wl, wd, tl, tr, v):
         # Convert all element of the list to be floats
         for i in range(len(wire_temps)):
             wire_temps[i] = float(wire_temps[i])
-        print(wire_temps)
+        # print(wire_temps)
 
         # Pass in the the array of the wire temps
         plotter.add_interval(wire_temps)
@@ -214,6 +214,7 @@ def doCalcs(k, p, c, it, lt, rt, l, sc, ti, dt):
             top = (uold[x+1]-2*uold[x]+uold[x-1])
             unew[x]=const*top + uold[x]
         u.append(unew[:])
+        print(i, unew)
         uold = copyList(u[i])
 
     return u[:]
@@ -263,9 +264,9 @@ def main(debug=False):
     u = doCalcs(k, p, c, init_temp, left_temp, right_temp, length, sections, time_int, deltat)
 
 
-    print(u)
+    # print(u)
     saveListToCSV(u, "out")
-    visualize("out", length, sections, left_temp, right_temp, True)
+    visualize("out", length, sections, left_temp, right_temp, False)
 
 
 main()
