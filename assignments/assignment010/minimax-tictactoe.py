@@ -1,3 +1,5 @@
+from math import inf as infinity
+
 def is_int(s):
     negative = True if s[:1] == '-' else False
     if negative:
@@ -67,13 +69,13 @@ def calcWins(n, grid):
     return (wins)
 
 
-def parseGrid(grid, mock_plays):
+def parseGrid(grid, plays):
     xs, os, pn = 1, 1, 0
     for y in range(len(grid)):
         for x in range(len(grid)):
-            if mock_plays[x][y] == 'X':
+            if plays[x][y] == 'X':
                 xs *= grid[x][y]
-            if mock_plays[x][y] == 'O':
+            if plays[x][y] == 'O':
                 os *= grid[x][y]
     return xs, os
 
@@ -143,6 +145,10 @@ def makePlay(play, grid):
                     makePlay(play, grid)
 
 
+def copy_grid(grid):
+    return grid[:]
+
+
 def printGrid(grid):
     """
      - Get grid size
@@ -151,6 +157,74 @@ def printGrid(grid):
     """
     for r in grid:
         print(' | '.join(str(e) for e in r))
+
+
+def play_move(state, player, block_num):
+    if state[int((block_num-1)/3)][(block_num-1) % 3] is '_':
+        state[int((block_num-1)/3)][(block_num-1) % 3] = player
+    else:
+        print(state[int((block_num-1)/3)][(block_num-1) % 3])
+        block_num = int(
+            input("Cell is filled try again!"))
+        play_move(state, player, block_num)
+
+
+def getBestMove(grid, pgrid, player, windict):
+    """  
+    Minimax Algorithm
+
+    AI is O
+    """
+    n = len(grid[0])
+    xs, os = parseGrid(grid, pgrid)
+    w = checkWins(windict, n**2, xs, os)
+
+    if w['x']:
+        return -1
+    if w['o']:
+        return 1
+    if w['t']:
+        return 0
+
+    moves = []
+    empty_cells = []
+    for i in range(n):
+        for j in range(n):
+            if grid[i][j] == '_':
+                indx = i*(n) + (j+1)
+                empty_cells.append(indx)
+    
+    for empty_cell in empty_cells:
+        move = {}
+        move['index'] = empty_cell
+        new_state = copy_grid(grid)
+        play_move(new_state, player, empty_cell)
+        
+        if player == 0: # If human
+            result = getBestMove(new_state, pgrid, player, windict)
+            move['score'] = result
+        else: # Else AI
+            result = getBestMove(new_state, pgrid, player, windict)
+            move['score'] = result
+        
+        moves.append(move)
+    
+    # Find best move
+    best_move = None
+    if player == 1:   # If AI player
+        best = -infinity
+        for move in moves:
+            if move['score'] > best:
+                best = move['score']
+                best_move = move['index']
+    else:
+        best = infinity
+        for move in moves:
+            if move['score'] < best:
+                best = move['score']
+                best_move = move['index']
+    
+    return best_move
 
 
 def main():
@@ -177,10 +251,42 @@ def main():
 
         printGrid(pgrid)
 
-
-		# NOTE: pin is how many players
+        # NOTE: pin is how many players
         if pin == 1:
-            pass
+            play = 0
+            while not win:
+                if play == 0:
+                    makePlay(play, grid)
+                    printGrid(pgrid)
+                    xs, os = parseGrid(grid, pgrid)
+                    w = checkWins(windict, cin**2, xs, os)
+                    getBestMove(pgrid, grid, play, windict)
+                
+                if play == 1:
+                    choice = getBestMove(pgrid, grid, play, windict)
+                    play_move(grid, play, choice)
+                    
+                xs, os = parseGrid(grid, pgrid)
+                w = checkWins(windict, cin**2, xs, os)
+                getBestMove(pgrid, grid, play, windict)
+
+                if w['x']:
+                    win = True
+                    print('Player 0 has won!')
+                    break
+                if w['o']:
+                    win = True
+                    print('Player 1 has won!')
+                    break
+                if w['t']:
+                    win = True
+                    print('There is a tie!')
+                    break
+                if play == 0:
+                    play = 1
+                else:
+                    play = 0
+                    
         else:
             play = 0
             while not win:
@@ -188,6 +294,7 @@ def main():
                 printGrid(pgrid)
                 xs, os = parseGrid(grid, pgrid)
                 w = checkWins(windict, cin**2, xs, os)
+                getBestMove(pgrid, grid, play, windict)
 
                 if w['x']:
                     win = True
