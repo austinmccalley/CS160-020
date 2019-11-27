@@ -1,4 +1,3 @@
-
 def is_int(s):
     negative = True if s[:1] == '-' else False
     if negative:
@@ -10,7 +9,7 @@ def is_int(s):
         return True
 
 def withinRange(n, r):
-    return n < r
+    return n <= r
 
 def calcPrimes(n):
     primes = []
@@ -21,11 +20,11 @@ def calcPrimes(n):
         i+=1
     return primes
 
-def isPrime(n): 
-    if (n <= 1): 
+def isPrime(n):
+    if (n <= 1):
         return False
-    for i in range(2, n): 
-        if (n % i == 0): 
+    for i in range(2, n):
+        if (n % i == 0):
             return False
     return True
 
@@ -50,6 +49,7 @@ def calcWins(n, grid):
     wins = {}
     wins['fdiag'] = multList([row[i] for i,row in enumerate(grid)])
     wins['sdiag'] = multList([row[-i-1] for i,row in enumerate(grid)])
+    wins['nowin'] = multList([j for sub in grid for j in sub])
     for y in range(n):
         for x in range(n):
             if x == 0:
@@ -73,13 +73,16 @@ def parseGrid(grid, mock_plays):
 def checkWins(wins, n, xs, os):
     primes = calcPrimes(n)
     for k, v in wins.items():
+        if k == 'nowin':
+            if v == xs*os:
+                return {'x': False, 'o': False, 't': True}
         xdiv = xs / v
         odiv = os / v
         if xdiv in primes or str(xdiv).split('.')[1] == '0':
-            return {'x':True, 'o': False}
+            return {'x':True, 'o': False, 't':False}
         elif odiv in primes or str(odiv).split('.')[1] == '0':
-            return {'x':False, 'o': True}
-    return {'x': False, 'o': False}
+            return {'x':False, 'o': True, 't':False}
+    return {'x': False, 'o': False, 't': False}
 
 def initBGrid(r, c):
     grid = []
@@ -132,7 +135,7 @@ def makePlay(play, grid):
                     makePlay(play, grid)
 
 def printGrid(grid):
-    """ 
+    """
      - Get grid size
      - For each col in a row
      - Seperate and print each elm with a space
@@ -144,35 +147,42 @@ def printGrid(grid):
 
 def main():
 
-    # TODO: Parse to check if int=
-    cin = int(input('What size grid do you want to play with? '))
+    cin = input('What size grid do you want to play with? ')
 
-    pgrid = initBGrid(cin, cin)
-    grid = calcPGrid(cin, cin)
+    if not is_int(cin):
+        print('You did enter an integer of how big you want the grid to be')
+        main()
+    else:
+        cin  = int(cin)
+        pgrid = initBGrid(cin, cin)
+        grid = calcPGrid(cin, cin)
 
-    win = False
-    windict = calcWins(cin, grid)
+        win = False
+        windict = calcWins(cin, grid)
 
-    printGrid(pgrid)
-    play = 0
-    while not win:
-        makePlay(play, pgrid)
         printGrid(pgrid)
-        xs, os = parseGrid(grid, pgrid)
-        w = checkWins(windict, cin**2, xs, os)
+        play = 0
+        while not win:
+            makePlay(play, pgrid)
+            printGrid(pgrid)
+            xs, os = parseGrid(grid, pgrid)
+            w = checkWins(windict, cin**2, xs, os)
 
-        if w['x']:
-            win = True
-            print('Player 0 has won!')
-            break
-        if w['o']:
-            win = True
-            print('Player 1 has won!')
-            break
-            
-        if play == 0:
-            play = 1
-        else:
-            play = 0
+            if w['x']:
+                win = True
+                print('Player 0 has won!')
+                break
+            if w['o']:
+                win = True
+                print('Player 1 has won!')
+                break
+            if w['t']:
+                win = True
+                print('There is a tie!')
+                break
+            if play == 0:
+                play = 1
+            else:
+                play = 0
 
 main()
